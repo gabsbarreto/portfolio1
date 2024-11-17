@@ -3,8 +3,11 @@
 Gabriel Barreto
 
 ### Education
-*Currently:* MBA in Data Science and Analytics - ECD: April/2024
-Finished
+**Ongoing:**     MBA in Data Science and Analytics - ECD: Apr/2025
+**Completed:**   Direct PhD in Skeletal Muscle Systems Science - Sep/2024
+                *-CYP1A2 genotypes and the physiological and acute effects of caffeine supplementation.*
+                 Bachelor's degree in Nutrition and Dietetics
+                *-Preoperative fasting: the role of the dietitian in a nutritional therapy multidisciplinary team.*
 
 #### Links to Publications
 [ResearchGate](https://www.researchgate.net/profile/Gabriel-Henrique-Barreto)
