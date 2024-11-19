@@ -68,6 +68,11 @@ summary(cars)
 
 You can also embed plots, for example:
 
+``` r
+(ggplot(data = FULLDATA2, aes(x = coffeetea, y = LBXGLT)) +
+  geom_point())
+```
+
     ## Warning: Removed 39341 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
