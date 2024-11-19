@@ -69,14 +69,11 @@ summary(cars)
 You can also embed plots, for example:
 
 ``` r
-(ggplot(data = FULLDATA2, aes(x = coffeetea, y = LBXGLT)) +
-  geom_point())
+ggplot(data = FULLDATA2, aes(x = coffeetea, y = LBXGLT)) +
+  geom_point()
 ```
 
-    ## Warning: Removed 39341 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
-
-![](NHANES-Git_files/figure-gfm/pressure-1.png)<!-- -->
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 Note that the `echo = FALSE` parameter was added to the code chunk to
 prevent printing of the R code that generated the plot.
