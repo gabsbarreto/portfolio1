@@ -18,9 +18,11 @@ here](https://www.cdc.gov/nchs/nhanes/index.htm).
 1.  [Obtaining data with the NHANES API.](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#obtaining-data-from-nhanes-api)
 2.  [Obtaining dietary data separate by assessment day](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#dietary-data)
 3.  [Calculating caffeine consumption separate by food source](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#caffeine-by-food-source)
-4.  [Using chatGPT to categorise participans’ prescribed medication](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#physical-activity)
-5.  [Merging all DFs]()
-6.  [Final adjusments on data]()
+4.  [Calculating physical activity levels](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#physical-activity)
+5.  [Using chatGPT to categorise participans’ prescribed medication](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#using-gpt-for-medication-data)
+6.  [Merging all DFs](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#merging-all-dataframes)
+7.  [Final adjusments on data](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#final-data-wrangling-procedures)
+8.  
 
 ### Packages used
 
