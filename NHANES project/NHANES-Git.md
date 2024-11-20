@@ -3,17 +3,20 @@ NHANES
 
 ## NHANES (complex survey) data analysis
 
-This is an R Markdown format used for publishing markdown documents to
-GitHub. When you click the **Knit** button all R code chunks are run and
-a markdown file (.md) suitable for publishing to GitHub is generated.
+This study aimed to evaluate the association between habitual caffeine
+consumption and cardiovascular measures (systolic and diastolic blood
+pressure) as well as insulin sensitivity markers (fasting glucose and
+insulin, HOMA-IR, HbA1C, and plasma glucose during a two-hour oral
+glucose tolerance test \[OGTT2H\]) in the US population using the NHANES
+database.
 
 ### Reading packages
 
 I used ‘nhanesA’, which is a package for obtaining and exploring NHANES
 data.
 
-Also, I used the usual ‘tidyverse’ for data wrangling, ‘survey’ for the
-analyses and ‘emmeans’ for estimations of marginal group means.
+Also, I used the usual ‘dplyr’ (tidyverse) for data wrangling, ‘survey’
+for the analyses and ‘emmeans’ for estimations of marginal group means.
 
 I have also used the ‘openai’ package to access the GPT API for some
 textual analysis.
@@ -654,9 +657,8 @@ df %>%
                               is.na(RIDEXPRG) ~ 'No'))
 ```
 
-Finally, the CDC recommends that individual participant weights (sample
-weights) are divided by the number of cycles one is trying to merge
-together.
+Finally, the CDC recommends that participant weights (sample weights)
+are divided by the total number of cycles that are merged together.
 
 Thus:
 
@@ -667,7 +669,7 @@ df %>%
          WTMEC2YR,
          WTDRD1,
         WTSOG2YR,
-        WTSAF2YR), funs (./5)) %>%
+        WTSAF2YR), funs (./5))
 ```
 
 ## Including Plots
