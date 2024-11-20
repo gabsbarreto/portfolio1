@@ -2,7 +2,7 @@
 ## Name and title
 Gabriel H. C. Barreto, RD, PhD
 
-[Go straight to my projects](https://github.com/gabsbarreto/portfolio1/blob/main/README.md#data-science-jobs-and-projects)
+[See my projects](https://github.com/gabsbarreto/portfolio1/blob/main/README.md#data-science-jobs-and-projects)
 
 ## Profile
 I am a **curious** and **inovative** individual, passionate about data and scientific research. With a background in nutrition and dietetics, my interests are sports nutrition, exercise, and health promotion. I was lucky enough to join a highly creative and collaborative research group during my **PhD degree in Musculoskeletal System Sciences**, having co-published with multiple researchers across the globe. Due to that, I have reached the mark of **21 manuscripts published**. My passion for data has led me to pursue an **MBA in Data Science and Analytics** one year prior to my PhD viva. That (not-so-great idea) has led me to develop **great prioritisation and time management skills**. Now, I am looking forward to starting a career in Data Science and Analytics in research.
