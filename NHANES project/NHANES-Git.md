@@ -850,8 +850,9 @@ anova(GLM3)
 hist(resid(GLM3))
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-32-1.png)<!-- --> Using
-the Gamma distribution to fit our data had an apparent better
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+
+Using the Gamma distribution to fit our data had an apparent better
 performance. We chose model 2, then.
 
 ## Fitting the Gamma Model
@@ -892,9 +893,9 @@ It seems that total habitual caffeine consumption does have an effect on
 the results of an OGTT2h test. However, other factors could affect this
 test, that reflects an individual’s insulin sensitivity.
 
-Factors could be: - Physical activity level - Sex - Race/Ethnicity -
-Age - BMI - The waist / height ratio (reflects an augmented central
-obesity) - Dietary habits - Medication usage
+Factors could be: - Physical activity level. - Sex. - Race/Ethnicity. -
+Age. - BMI. - The waist / height ratio (reflects an augmented central
+obesity). - Dietary habits. - Medication usage.
 
 I’ll perform a backwards stepwise method, which consists of including
 all potential confounding variables in the model, removing the least
@@ -1081,13 +1082,13 @@ anova(GLM2.4, method = "Wald")
 
 ``` r
 #### REMOVE THE VARIABLE GPT_glycemic
-GLM2.5 <- svyglm(LBXGLT ~ exercisecat +  RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT +   CHObw + FATbw + FIBERbw +  GPT_bloodpressure + totalcaff + I(totalcaff^2) , design = surveysub1, family = Gamma(link = 'identity' ))
+GLM2.5 <- svyglm(LBXGLT ~ exercisecat +  RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT +   CHObw + FATbw + FIBERbw +  GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
 
 # Model summary
 logLik(GLM2.5)
 ```
 
-    ## [1] -557.9979
+    ## [1] -561.0723
 
 ``` r
 summary(GLM2.5)
@@ -1097,52 +1098,50 @@ summary(GLM2.5)
     ## Call:
     ## svyglm(formula = LBXGLT ~ exercisecat + RIDRETH1 + RIDAGEYR + 
     ##     BMXBMI + WAISTHEIGHT + CHObw + FATbw + FIBERbw + GPT_bloodpressure + 
-    ##     totalcaff + I(totalcaff^2), design = surveysub1, family = Gamma(link = "identity"))
+    ##     totalcaff, design = surveysub1, family = Gamma(link = "identity"))
     ## 
     ## Survey design:
     ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No")
     ## 
     ## Coefficients:
     ##                                               Estimate Std. Error t value
-    ## (Intercept)                                  3.554e+01  4.590e+00   7.742
-    ## exercisecatmoderate                         -2.444e+00  1.193e+00  -2.049
-    ## exercisecathigh                             -6.042e+00  1.168e+00  -5.174
-    ## RIDRETH1Other Hispanic                      -3.801e+00  2.011e+00  -1.891
-    ## RIDRETH1Non-Hispanic White                  -6.337e+00  1.453e+00  -4.361
-    ## RIDRETH1Non-Hispanic Black                  -7.988e+00  1.723e+00  -4.637
-    ## RIDRETH1Other Race - Including Multi-Racial  1.212e+00  2.441e+00   0.497
-    ## RIDAGEYR                                     6.099e-01  3.222e-02  18.932
-    ## BMXBMI                                      -6.814e-01  1.815e-01  -3.755
-    ## WAISTHEIGHT                                  1.502e+02  1.348e+01  11.138
-    ## CHObw                                        2.205e-01  4.648e-01   0.474
-    ## FATbw                                       -9.517e-01  1.001e+00  -0.951
-    ## FIBERbw                                     -1.193e+01  4.092e+00  -2.916
-    ## GPT_bloodpressureYes                         6.114e+00  1.848e+00   3.308
-    ## totalcaff                                   -4.366e-02  7.349e-03  -5.940
-    ## I(totalcaff^2)                               2.593e-05  9.104e-06   2.848
+    ## (Intercept)                                  34.192657   4.917250   6.954
+    ## exercisecatmoderate                          -2.427842   1.186450  -2.046
+    ## exercisecathigh                              -5.975315   1.165810  -5.125
+    ## RIDRETH1Other Hispanic                       -3.958170   2.045999  -1.935
+    ## RIDRETH1Non-Hispanic White                   -7.080538   1.484638  -4.769
+    ## RIDRETH1Non-Hispanic Black                   -7.494598   1.700406  -4.408
+    ## RIDRETH1Other Race - Including Multi-Racial   0.954438   2.463025   0.388
+    ## RIDAGEYR                                      0.593129   0.031730  18.693
+    ## BMXBMI                                       -0.748659   0.178309  -4.199
+    ## WAISTHEIGHT                                 153.690631  13.475408  11.405
+    ## CHObw                                         0.410696   0.532819   0.771
+    ## FATbw                                        -1.396671   0.995497  -1.403
+    ## FIBERbw                                     -12.772760   4.297379  -2.972
+    ## GPT_bloodpressureYes                          6.154028   1.832294   3.359
+    ## totalcaff                                    -0.019327   0.004743  -4.075
     ##                                             Pr(>|t|)    
-    ## (Intercept)                                 9.17e-11 ***
-    ## exercisecatmoderate                         0.044605 *  
-    ## exercisecathigh                             2.46e-06 ***
-    ## RIDRETH1Other Hispanic                      0.063215 .  
-    ## RIDRETH1Non-Hispanic White                  4.80e-05 ***
-    ## RIDRETH1Non-Hispanic Black                  1.79e-05 ***
-    ## RIDRETH1Other Race - Including Multi-Racial 0.621087    
+    ## (Intercept)                                 2.09e-09 ***
+    ## exercisecatmoderate                         0.044775 *  
+    ## exercisecathigh                             2.87e-06 ***
+    ## RIDRETH1Other Hispanic                      0.057395 .  
+    ## RIDRETH1Non-Hispanic White                  1.08e-05 ***
+    ## RIDRETH1Non-Hispanic Black                  4.00e-05 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.699647    
     ## RIDAGEYR                                     < 2e-16 ***
-    ## BMXBMI                                      0.000377 ***
+    ## BMXBMI                                      8.33e-05 ***
     ## WAISTHEIGHT                                  < 2e-16 ***
-    ## CHObw                                       0.636928    
-    ## FATbw                                       0.345286    
-    ## FIBERbw                                     0.004880 ** 
-    ## GPT_bloodpressureYes                        0.001543 ** 
-    ## totalcaff                                   1.28e-07 ***
-    ## I(totalcaff^2)                              0.005905 ** 
+    ## CHObw                                       0.443619    
+    ## FATbw                                       0.165379    
+    ## FIBERbw                                     0.004142 ** 
+    ## GPT_bloodpressureYes                        0.001314 ** 
+    ## totalcaff                                   0.000128 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for Gamma family taken to be 0.1425454)
+    ## (Dispersion parameter for Gamma family taken to be 0.1449881)
     ## 
-    ## Number of Fisher Scoring iterations: 5
+    ## Number of Fisher Scoring iterations: 8
 
 ``` r
 anova(GLM2.5, method = "Wald")
@@ -1161,7 +1160,6 @@ anova(GLM2.5, method = "Wald")
     ## FIBERbw             4.6339   1.0000  67 0.0349510 *  
     ## GPT_bloodpressure  14.0722   1.0000  66 0.0003733 ***
     ## totalcaff          16.6054   1.0000  65 0.0001276 ***
-    ## I(totalcaff^2)      8.1124   1.0000  64 0.0059049 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
