@@ -15,7 +15,7 @@ here](https://www.cdc.gov/nchs/nhanes/index.htm).
 
 ## Step-by-step index
 
-1.  [Obtaining data with the NHANES API.]()
+1.  [Obtaining data with the NHANES API.](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#obtaining-data-from-nhanes-api)
 2.  [Obtaining dietary data separate by assessment day]()
 3.  [Calculating caffeine consumption separate by food source]()
 4.  [Using chatGPT to categorise participans’ prescribed medication]()
