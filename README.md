@@ -40,5 +40,5 @@ I am a **curious** and **inovative** individual, passionate about data and scien
  |Title  | Features|
 |:-------:|:---------:|
 |[Predicting running and cycling time during an IronMan<br>competition based on running and cycling efficiency <br>throughout a training season.]()|- Organising data for analysis. <br>- Data exploration and cleaning <br>-  |
-|[Is caffeine consumption associated with better glucose <br>tolerance in the USA population: NHANES](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md) |- Obtained data from NHANES with the API ('nhanesA')<br>- Cleaned and organised data with 'dplyr'. <br>- Used the 'openai' GPT API for drug categorisation <br>- Created regression models with the 'survey' package.<br> |
+|[Is caffeine consumption associated with better glucose <br>tolerance in the USA population: NHANES](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md) |- Obtained data from NHANES with an API ('nhanesA')<br>- Cleaned and organised data with 'dplyr'. <br>- Used openAI's GPT API to categorise participants<br>- Weighted polynomial GLM with the 'survey' package <br> |
 
