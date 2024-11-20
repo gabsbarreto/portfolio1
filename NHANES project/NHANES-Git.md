@@ -7,19 +7,22 @@ This study aimed to evaluate the association between habitual caffeine
 consumption and cardiovascular measures (systolic and diastolic blood
 pressure) as well as insulin sensitivity markers (fasting glucose and
 insulin, HOMA-IR, HbA1C, and plasma glucose during a two-hour oral
-glucose tolerance test \[OGTT2H\]) in the US population using the NHANES
-database.
+glucose tolerance test $$OGTT2H$$) in the US population. The data was
+obtained from NHANES, a biannual survey designed to assess the health
+and nutritional status of adults and children in the United States. For
+more information on NHANES, [click
+here](https://www.cdc.gov/nchs/nhanes/index.htm).
 
-### Reading packages
+## Step-by-step index
 
-I used ‘nhanesA’, which is a package for obtaining and exploring NHANES
-data.
+1.  [Obtaining data with the NHANES API.]()
+2.  [Obtaining dietary data separate by assessment day]()
+3.  [Calculating caffeine consumption separate by food source]()
+4.  [Using chatGPT to categorise participans’ prescribed medication]()
+5.  [Merging all DFs]()
+6.  [Final adjusments on data]()
 
-Also, I used the usual ‘dplyr’ (tidyverse) for data wrangling, ‘survey’
-for the analyses and ‘emmeans’ for estimations of marginal group means.
-
-I have also used the ‘openai’ package to access the GPT API for some
-textual analysis.
+### Packages used
 
 ``` r
 library(nhanesA)
@@ -106,6 +109,8 @@ examination phase, and another one via phonecall. I pulled the total
 results for macronutrients and caffeine separate for both days
 (DR1TOT_D - I and DR2TOT_D - I), binding them together.
 
+Example:
+
 ``` r
 DIET0506.1 <- nhanes('DR1TOT_D')
 DIET0506.1.2 <- DIET0506.1 %>%
@@ -117,60 +122,7 @@ DIET0506.2.2 <- DIET0506.2 %>%
 
 DIET0506FULL <- merge(DIET0506.1.2,DIET0506.2.2, by = 'SEQN', all = T)
 
-DIET0708.1 <- nhanes('DR1TOT_E')
-DIET0708.1.2 <- DIET0708.1 %>%
-  select(SEQN, WTDRD1, WTDR2D,  DR1DAY, DR1TKCAL, DR1TPROT,  DR1TCARB,DR1TTFAT,DR1TMFAT,DR1TPFAT, DR1TSFAT, DR1TCAFF,DR1TALCO, DR1TSUGR, DR1TFIBE )
-
-DIET0708.2 <- nhanes('DR2TOT_E')
-DIET0708.2.2 <- DIET0708.2 %>%
-  select(SEQN, DR2DAY, DR2TKCAL, DR2TPROT,  DR2TCARB,DR2TTFAT,DR2TMFAT,DR2TPFAT, DR2TSFAT, DR2TCAFF,DR2TALCO, DR2TSUGR, DR2TFIBE )
-
-DIET0708FULL <- merge(DIET0708.1.2, DIET0708.2.2, by = 'SEQN', all = T)
-
-
-DIET0910.1 <- nhanes('DR1TOT_F')
-DIET0910.1.2 <- DIET0910.1 %>%
-  select(SEQN, WTDRD1, WTDR2D,  DR1DAY, DR1TKCAL, DR1TPROT,  DR1TCARB,DR1TTFAT,DR1TMFAT,DR1TPFAT, DR1TSFAT, DR1TCAFF,DR1TALCO, DR1TSUGR, DR1TFIBE )
-
-DIET0910.2 <- nhanes('DR2TOT_F')
-DIET0910.2.2 <- DIET0910.2 %>%
-  select(SEQN, DR2DAY, DR2TKCAL, DR2TPROT,  DR2TCARB,DR2TTFAT,DR2TMFAT,DR2TPFAT, DR2TSFAT, DR2TCAFF,DR2TALCO, DR2TSUGR, DR2TFIBE, DR2TSUGR, DR2TFIBE )
-
-DIET0910FULL <- merge(DIET0910.1.2, DIET0910.2.2, by = 'SEQN', all = T)
-
-
-DIET1112.1 <- nhanes('DR1TOT_G')
-DIET1112.1.2 <- DIET1112.1 %>%
-  select(SEQN, WTDRD1, WTDR2D,  DR1DAY, DR1TKCAL, DR1TPROT,  DR1TCARB,DR1TTFAT,DR1TMFAT,DR1TPFAT, DR1TSFAT, DR1TCAFF,DR1TALCO, DR1TSUGR, DR1TFIBE, DR1TSUGR, DR1TFIBE )
-
-DIET1112.2 <- nhanes('DR2TOT_G')
-DIET1112.2.2 <- DIET1112.2 %>%
-  select(SEQN, DR2DAY, DR2TKCAL, DR2TPROT,  DR2TCARB,DR2TTFAT,DR2TMFAT,DR2TPFAT, DR2TSFAT, DR2TCAFF,DR2TALCO, DR2TSUGR, DR2TFIBE )
-
-DIET1112FULL <- merge(DIET1112.1.2, DIET1112.2.2, by = 'SEQN', all = T)
-
-
-DIET1314.1 <- nhanes('DR1TOT_H')
-DIET1314.1.2 <- DIET1314.1 %>%
-  select(SEQN, WTDRD1, WTDR2D,  DR1DAY, DR1TKCAL, DR1TPROT,  DR1TCARB,DR1TTFAT,DR1TMFAT,DR1TPFAT, DR1TSFAT, DR1TCAFF,DR1TALCO, DR1TSUGR, DR1TFIBE )
-
-DIET1314.2 <- nhanes('DR2TOT_H')
-DIET1314.2.2 <- DIET1314.2 %>%
-  select(SEQN, DR2DAY, DR2TKCAL, DR2TPROT,  DR2TCARB,DR2TTFAT,DR2TMFAT,DR2TPFAT, DR2TSFAT, DR2TCAFF,DR2TALCO, DR2TSUGR, DR2TFIBE )
-
-DIET1314FULL <- merge(DIET1314.1.2, DIET1314.2.2, by = 'SEQN', all = T)
-
-
-DIET1516.1 <- nhanes('DR1TOT_I')
-DIET1516.1.2 <- DIET1516.1 %>%
-  select(SEQN, WTDRD1, WTDR2D,  DR1DAY, DR1TKCAL, DR1TPROT,  DR1TCARB,DR1TTFAT,DR1TMFAT,DR1TPFAT, DR1TSFAT, DR1TCAFF,DR1TALCO, DR1TSUGR, DR1TFIBE )
-
-DIET1516.2 <- nhanes('DR2TOT_I')
-DIET1516.2.2 <- DIET1516.2 %>%
-  select(SEQN, DR2DAY, DR2TKCAL, DR2TPROT,  DR2TCARB,DR2TTFAT,DR2TMFAT,DR2TPFAT, DR2TSFAT, DR2TCAFF,DR2TALCO, DR2TSUGR, DR2TFIBE )
-
-DIET1516FULL <- merge(DIET1516.1.2, DIET1516.2.2, by = 'SEQN', all = T)
-
+[...]
 
 DIETALLFULL <- bind_rows(DIET0506FULL,
                          DIET0708FULL,
@@ -261,7 +213,7 @@ SUMMCOFFEE0506.2 <- FOOD0506.2.2 %>%
 
 #### JOINING BOTH DAYS
 summ0506join <- full_join(SUMMCOFFEE0506.1,SUMMCOFFEE0506.2, by = 'SEQN') %>%
-  rename(CAFFother1 = '0.x', CAFFother2 = "0.y", CAFFcoffeetea1 = '1.x', CAFFcoffeetea2 = "1.y") ###when joined, it is ideal to differenciate which one is from day 1 and day 2
+  rename(CAFFother1 = '0.x', CAFFother2 = "0.y", CAFFcoffeetea1 = '1.x', CAFFcoffeetea2 = "1.y") ###when joined, it is ideal to differentiate which one is from day 1 and day 2
 ```
 
 Visualising
@@ -283,10 +235,11 @@ head(summ0506join)
 
 #### Physical activity
 
-For physical activity data, the extracted data was available by type of
-physical activity (e.g., commuting, moderate or vigorous work-related or
-non work-related). For commuting and moderate physical activities, a MET
-score of 4 was given, and 8 for vigorous. This is how I handled it:
+Regarding participants’ physical activity, the extracted data was
+available separated by type of physical activity (e.g., commuting,
+moderate or vigorous work-related or non work-related). For commuting
+and moderate physical activities, a MET score of 4 was given, and of 8
+for vigorous. This is how I handled it:
 
 ``` r
 PAQ0708 <- nhanes('PAQ_E')
@@ -313,14 +266,13 @@ PAQ07082 <- PAQ0708 %>%
 
 #### Using GPT for medication data
 
-Now for my favourite part: medication. Each participant’s list of
-prescribed medication in the 30 days preceding the data collection was
-obtained by NHANES staff. They are listed and were obtained from
+Each participant has provided a list of prescribed medication consumed
+in the 30 days preceding the interview. These datasets are available as
 ‘RXQ_RX_E - I’.
 
 My idea was to categorise those participants between those who were (or
-were not) taking oral hypoglycemic drugs and blood pressure medication.
-I wanted to include those as covariates in my models.
+were not) taking oral hypoglycemic drugs and blood pressure medication,
+and include those in the statistical models.
 
 I used the openAI API for that, obtaining “Yes” or “No” answers to the
 classes of drugs I was interested in:
@@ -396,8 +348,9 @@ head(GPTDFprescriptions)
     ## 5   MUPIROCIN TOPICAL           No                No
     ## 6           GLIPIZIDE          Yes                No
 
-I had to merge the obtained responses (GPTDFprescriptions) with the full
-medication table and summarise it.
+After thaat, I merged the obtained responses (GPTDFprescriptions) with
+the df with the full prescriptions and summarised them into a single row
+for each participant.
 
 ``` r
 medsfull2 <- PMedication %>%
