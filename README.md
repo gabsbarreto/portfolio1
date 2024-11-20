@@ -1,4 +1,4 @@
-# Resumeé/Portfolio
+# Resume/Portfolio
 ## Name and title
 Gabriel H. C. Barreto, RD, PhD
 
