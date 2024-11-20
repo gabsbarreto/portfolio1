@@ -35,12 +35,8 @@ I am a **curious** and **inovative** individual, passionate about data and scien
 ## Data Science Jobs and Projects
 
 
-
-<div align="center">
- 
  |Title  | Features|
 |:-------:|:---------:|
 |[Predicting running and cycling time during an IronMan<br>competition based on running and cycling efficiency <br>throughout a training season.]()|- Organising data for analysis. <br>- Data exploration and cleaning <br>-  |
-|[Is caffeine consumption associated with better glucose <br>tolerance in the USA population: NHANES]() |- Organising data for analysis. <br>- Data exploration and cleaning <br>-  |
+|[Is caffeine consumption associated with better glucose <br>tolerance in the USA population: NHANES]() |- Organising data for analysis. <br>- Data exploration and cleaning <br>  |
 
-</div>
