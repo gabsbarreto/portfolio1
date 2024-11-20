@@ -2,6 +2,8 @@
 ## Name and title
 Gabriel H. C. Barreto, RD, PhD
 
+[Go straight to my projects](https://github.com/gabsbarreto/portfolio1/blob/main/README.md#data-science-jobs-and-projects)
+
 ## Profile
 I am a **curious** and **inovative** individual, passionate about data and scientific research. With a background in nutrition and dietetics, my interests are sports nutrition, exercise, and health promotion. I was lucky enough to join a highly creative and collaborative research group during my **PhD degree in Musculoskeletal System Sciences**, having co-published with multiple researchers across the globe. Due to that, I have reached the mark of **21 manuscripts published**. My passion for data has led me to pursue an **MBA in Data Science and Analytics** one year prior to my PhD viva. That (not-so-great idea) has led me to develop **great prioritisation and time management skills**. Now, I am looking forward to starting a career in Data Science and Analytics in research.
 
@@ -12,7 +14,7 @@ I am a **curious** and **inovative** individual, passionate about data and scien
 *"CYP1A2 genotypes and the physiological and acute effects of caffeine supplementation."*
 #### Bachelor's degree in Nutrition and Dietetics - Feb/2008 - Dec/2012
 *"Preoperative fasting: the role of the dietitian in a nutritional therapy multidisciplinary team."* 
- 
+
 ## Publications
 ### Five most recent peer-reviewed publications (out of 21)
 1.	Merola, K.P, Cardoso, M. C., **Barreto, G.**, Chagas, M. C., Saunders, L.F., Saunders, B., Berton, D. C.,  *Virtual Reality High-Intensity Interval Training is a Viable Alternative to Traditional Exercise.* <ins>JMIR Serious Games<ins>, Oct 2024. 
