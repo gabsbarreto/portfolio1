@@ -7,7 +7,7 @@ This study aimed to evaluate the association between habitual caffeine
 consumption and cardiovascular measures (systolic and diastolic blood
 pressure) as well as insulin sensitivity markers (fasting glucose and
 insulin, HOMA-IR, HbA1C, and plasma glucose during a two-hour oral
-glucose tolerance test $$OGTT2H$$) in the US population. The data was
+glucose tolerance test OGTT2H) in the US population. The data was
 obtained from NHANES, a biannual survey designed to assess the health
 and nutritional status of adults and children in the United States. For
 more information on NHANES, [click
@@ -15,13 +15,20 @@ here](https://www.cdc.gov/nchs/nhanes/index.htm).
 
 ## Step-by-step index
 
-1.  [Obtaining data with the NHANES API.](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#obtaining-data-from-nhanes-api)
-2.  [Obtaining dietary data separate by assessment day](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#dietary-data)
-3.  [Calculating caffeine consumption separate by food source](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#caffeine-by-food-source)
-4.  [Calculating physical activity levels](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#physical-activity)
-5.  [Using chatGPT to categorise participans’ prescribed medication](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#using-gpt-for-medication-data)
-6.  [Merging all DFs](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#merging-all-dataframes)
-7.  [Final adjusments on data](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#final-data-wrangling-procedures)
+1.  [Obtaining data with the NHANES
+    API.](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#obtaining-data-from-nhanes-api)
+2.  [Obtaining dietary data separate by assessment
+    day](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#dietary-data)
+3.  [Calculating caffeine consumption separate by food
+    source](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#caffeine-by-food-source)
+4.  [Calculating physical activity
+    levels](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#physical-activity)
+5.  [Using chatGPT to categorise participans’ prescribed
+    medication](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#using-gpt-for-medication-data)
+6.  [Merging all
+    DFs](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#merging-all-dataframes)
+7.  [Final adjusments on
+    data](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#final-data-wrangling-procedures)
 8.  
 
 ### Packages used
@@ -627,16 +634,188 @@ df %>%
         WTSAF2YR), funs (./5))
 ```
 
-## Including Plots
+## Survey Design
 
-You can also embed plots, for example:
+#### Define Survey Design
+
+The survey design is defined using the NHANES dataset, considering
+appropriate weights, stratification, and cluster variables. This step
+ensures that the survey data is properly adjusted for complex sampling.
 
 ``` r
-ggplot(data = FULLDATA2, aes(x = coffeetea, y = LBXGLT)) +
-  geom_point()
+# Define the survey design
+dataset <- FULLDATA2[!is.na(FULLDATA2$WTSOG2YR), ]
+survey1 <- svydesign(
+  ids = ~SDMVPSU, 
+  strata = ~SDMVSTRA,
+  nest = TRUE,
+  weights = ~WTSOG2YR,
+  data = dataset
+)
+
+# Subset for analysis
+surveysub1 <- subset(survey1, RIDAGEYR >= 18 & pregnant == "No" & !is.na(coffeetea))
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+## Box-Cox Transformation
 
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
+#### Find Optimal Lambda for Box-Cox Transformation
+
+A Box-Cox transformation is applied to determine the optimal lambda for
+transforming the response variable (LBXGLT). This helps in stabilizing
+the variance and making the data more normally distributed.
+
+``` r
+# Apply Box-Cox transformation to find optimal lambda
+box1 <- car::boxCox(glm(LBXGLT ~ RIDRETH1 + RIAGENDR + GPT_glycemic + GPT_bloodpressure + RIDAGEYR + BMXBMI + WAISTHEIGHT + exercisecat + FIBERbw + poly(totalcaff, 2),
+                        data = subset(surveysub1$variables, !is.na(coffeetea) & !is.na(WTSOG2YR)),
+                        weights = WTSOG2YR, family = Gamma(link = 'log')))
+```
+
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+``` r
+lambda <- box1$x[box1$y == max(box1$y)]
+lambda
+```
+
+    ## [1] 0.989899
+
+## Generalized Linear Model
+
+#### Fit Generalized Linear Model with Box-Cox Transformation
+
+Using the optimal lambda, a generalized linear model (GLM) is fitted to
+assess the relationship between LBXGLT (OGTT2H) and several predictors,
+such as demographic and health-related variables.
+
+``` r
+# Create the transformation object
+tran1 <- make.tran('boxcox', lambda)
+
+# Fit the generalized linear model
+GLM1 <- with(tran1, svyglm(linkfun(LBXGLT) ~ RIDRETH1 + RIAGENDR + GPT_glycemic + GPT_bloodpressure + RIDAGEYR + BMXBMI + WAISTHEIGHT + exercisecat + FIBERbw + poly(totalcaff, 2),
+                           design = surveysub1, family = Gamma(link = 'log')))
+
+# Model summary
+logLik(GLM1)
+```
+
+    ## Warning in logLik.svyglm(GLM1): svyglm not fitted by maximum likelihood.
+
+    ## [1] -535.5667
+
+``` r
+summary(GLM1)
+```
+
+    ## 
+    ## Call:
+    ## svyglm(formula = linkfun(LBXGLT) ~ RIDRETH1 + RIAGENDR + GPT_glycemic + 
+    ##     GPT_bloodpressure + RIDAGEYR + BMXBMI + WAISTHEIGHT + exercisecat + 
+    ##     FIBERbw + poly(totalcaff, 2), design = surveysub1, family = Gamma(link = "log"))
+    ## 
+    ## Survey design:
+    ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No" & !is.na(coffeetea))
+    ## 
+    ## Coefficients:
+    ##                                               Estimate Std. Error t value
+    ## (Intercept)                                  3.9230797  0.0360714 108.759
+    ## RIDRETH1Other Hispanic                      -0.0346658  0.0175780  -1.972
+    ## RIDRETH1Non-Hispanic White                  -0.0652641  0.0128169  -5.092
+    ## RIDRETH1Non-Hispanic Black                  -0.0810689  0.0156552  -5.178
+    ## RIDRETH1Other Race - Including Multi-Racial  0.0079953  0.0220986   0.362
+    ## RIAGENDRFemale                              -0.0274193  0.0102752  -2.668
+    ## GPT_glycemicYes                              0.3583719  0.1999725   1.792
+    ## GPT_bloodpressureYes                         0.0405011  0.0141286   2.867
+    ## RIDAGEYR                                     0.0056220  0.0003012  18.664
+    ## BMXBMI                                      -0.0072540  0.0015572  -4.658
+    ## WAISTHEIGHT                                  1.4432214  0.1194816  12.079
+    ## exercisecatmoderate                         -0.0167641  0.0106728  -1.571
+    ## exercisecathigh                             -0.0574992  0.0108720  -5.289
+    ## FIBERbw                                     -0.1269994  0.0317817  -3.996
+    ## poly(totalcaff, 2)1                         -3.8638279  0.5950841  -6.493
+    ## poly(totalcaff, 2)2                          2.4046933  0.8759053   2.745
+    ##                                             Pr(>|t|)    
+    ## (Intercept)                                  < 2e-16 ***
+    ## RIDRETH1Other Hispanic                      0.052922 .  
+    ## RIDRETH1Non-Hispanic White                  3.35e-06 ***
+    ## RIDRETH1Non-Hispanic Black                  2.42e-06 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.718692    
+    ## RIAGENDRFemale                              0.009643 ** 
+    ## GPT_glycemicYes                             0.077843 .  
+    ## GPT_bloodpressureYes                        0.005610 ** 
+    ## RIDAGEYR                                     < 2e-16 ***
+    ## BMXBMI                                      1.66e-05 ***
+    ## WAISTHEIGHT                                  < 2e-16 ***
+    ## exercisecatmoderate                         0.121178    
+    ## exercisecathigh                             1.59e-06 ***
+    ## FIBERbw                                     0.000169 ***
+    ## poly(totalcaff, 2)1                         1.43e-08 ***
+    ## poly(totalcaff, 2)2                         0.007837 ** 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for Gamma family taken to be 0.1356621)
+    ## 
+    ## Number of Fisher Scoring iterations: 5
+
+``` r
+anova(GLM1)
+```
+
+    ## Anova table:  (Rao-Scott LRT)
+    ## svyglm(formula = linkfun(LBXGLT) ~ RIDRETH1, design = surveysub1, 
+    ##     family = Gamma(link = "log"))
+    ##                       stats      DEff        df ddf         p    
+    ## RIDRETH1             3.2585   0.20437   4.00000  75 0.0073872 ** 
+    ## RIAGENDR             2.2506   0.24798   1.00000  74 0.0037582 ** 
+    ## GPT_glycemic         0.9790   0.13713   1.00000  73 0.0097861 ** 
+    ## GPT_bloodpressure   77.1656   0.26345   1.00000  72 < 2.2e-16 ***
+    ## RIDAGEYR           125.8850   0.19674   1.00000  71 < 2.2e-16 ***
+    ## BMXBMI              68.4596   0.19615   1.00000  70 < 2.2e-16 ***
+    ## WAISTHEIGHT         24.5003   0.13952   1.00000  69 < 2.2e-16 ***
+    ## exercisecat          6.4606   0.17014   2.00000  67 4.125e-07 ***
+    ## FIBERbw              2.0734   0.13956   1.00000  66 0.0002856 ***
+    ## poly(totalcaff, 2)  18.1693   0.47193   2.00000  64 3.175e-06 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+## Residuals Analysis
+
+#### Analyze Residuals of the Fitted Model
+
+A histogram of residuals is plotted to evaluate the model’s fit. The
+residuals should ideally be normally distributed to ensure a good fit of
+the model.
+
+``` r
+# Plot histogram of residuals
+hist(resid(GLM1), main = "Residuals of GLM", xlab = "Residuals")
+```
+
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+
+## Estimated Means and Plot
+
+#### Calculate Estimated Means and Plot Observed Data
+
+Estimated means for different levels of caffeine intake are calculated
+using the ‘emmeans’ package. A plot is created to visualize the
+relationship between coffee/tea intake and LBXGLT (OGTT2H), including
+confidence intervals.
+
+``` r
+# Calculate estimated means for totalcaff
+means1 <- data.frame(emmeans(GLM1, ~totalcaff + GPT_glycemic, data = surveysub1$variables, at = list(totalcaff = seq(0, 2000, 100), GPT_glycemic = c("Yes", "No") ), type = 'response'))
+
+# Plot observed data and fitted values
+ggplot(data = subset(FULLDATA2, RIDAGEYR >= 18 & pregnant == "No" & !is.na(totalcaff) & !is.na(WTSOG2YR) & WTSOG2YR > 0 & !is.na(totalcaffcat)),
+       aes(x = totalcaff, y = LBXGLT)) +
+  geom_point(pch = 21, aes(alpha = WTSOG2YR)) +
+  geom_line(data = means1, size = 1, aes(x = totalcaff, y = response, colour = GPT_glycemic)) +
+  geom_ribbon(data = means1, alpha = 0.3, aes(y = response, ymin = lower.CL, ymax = upper.CL, group = GPT_glycemic)) +
+  theme_classic()
+```
+
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
