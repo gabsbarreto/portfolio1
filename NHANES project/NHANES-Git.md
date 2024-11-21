@@ -29,7 +29,11 @@ here](https://www.cdc.gov/nchs/nhanes/index.htm).
     DFs](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#merging-all-dataframes)
 7.  [Final adjusments on
     data](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#final-data-wrangling-procedures)
-8.  
+8.  [Creating the survey
+    design](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#survey-design)
+9.  [Exploratory
+    analysis](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#exploratory-analysis)
+10. [Fixing skewness]()
 
 ### Packages used
 
@@ -686,9 +690,10 @@ Let’s check the distribution of our variable of interest:
 svyhist(~LBXGLT, design = surveysub1) 
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-28-1.png)<!-- --> It seems
-that these values are positively skewed. I will first run the svyglm and
-check the residuals for the model.
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+It seems that these values are positively skewed. I will first run the
+svyglm and check the residuals for the model.
 
 ``` r
 # Fit the generalized linear model
@@ -727,10 +732,16 @@ summary(GLM1)
 hist(resid(GLM1))
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-29-1.png)<!-- --> The
-residuals follow the same distribution. Next, I’ll use the Gamma
-distribution to fit the data and see if the residuals look closer to a
-normal distribution.
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+
+The residuals follow the same distribution.
+
+## Fixing Skewness
+
+### Gamma distribution
+
+Next, I’ll use the Gamma distribution to fit the data and see if the
+residuals look closer to a normal distribution.
 
 ``` r
 # Fit the generalized linear model
@@ -769,10 +780,11 @@ summary(GLM2)
 hist(resid(GLM2))
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-30-1.png)<!-- --> It is
-not perfect, but it is better.
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
 
-## Box-Cox Transformation
+It does seem better.
+
+### Box-Cox Transformation
 
 Another option for the skewness would be a Box-Cox transformation of the
 data. This helps in stabilizing the variance and making the data more
@@ -796,8 +808,6 @@ lambda
 ```
 
     ## [1] 1.111111
-
-#### Fit Generalized Linear Model with Box-Cox Transformation
 
 Using the optimal lambda, a generalized linear model (GLM) is fitted to
 assess the relationship between LBXGLT (OGTT2H) and several predictors,
@@ -897,7 +907,7 @@ Factors could be: - Physical activity level. - Sex. - Race/Ethnicity. -
 Age. - BMI. - The waist / height ratio (reflects an augmented central
 obesity). - Dietary habits. - Medication usage.
 
-I’ll perform a backwards stepwise method, which consists of including
+I’ve performed a backwards stepwise method, which consists of including
 all potential confounding variables in the model, removing the least
 significant one until an ideal model is reached.
 
@@ -996,8 +1006,9 @@ car::Anova(GLM2.3, test = "F", type = 'III')
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
+### REMOVE THE VARIABLE CHObw
+
 ``` r
-#### REMOVE THE VARIABLE CARBOHYDRATE
 GLM2.4 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
                  + FATbw + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
 
@@ -1086,8 +1097,9 @@ car::Anova(GLM2.4, test = "F", type = 'III')
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
+### REMOVE THE VARIABLE FATbw
+
 ``` r
-#### REMOVE THE VARIABLE FATbw
 GLM2.5 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
                  + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, 
                  design = surveysub1, family = Gamma(link = 'identity' ))
@@ -1174,8 +1186,9 @@ car::Anova(GLM2.5, test = "F", type = 'III')
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
+### REMOVE THE VARIABLE GPT_glycemic
+
 ``` r
-#### REMOVE THE VARIABLE FATbw
 GLM2.6 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
                  + FIBERbw + GPT_bloodpressure + totalcaff, 
                  design = surveysub1, family = Gamma(link = 'identity' ))
@@ -1263,7 +1276,7 @@ Some evidence has shown a U-shaped relationship between caffeine
 consumption and health variables [(see
 here)](https://dmsjournal.biomedcentral.com/articles/10.1186/s13098-024-01417-6).
 
-Therefore, a polynomial model will be tested.
+Therefore, a polynomial model will be tested. \### Polynomial model
 
 ``` r
 #### POLYNOMIAL MODEL
@@ -1377,4 +1390,4 @@ ggplot(data =  subset(surveysub1$variables, WTSOG2YR > 0), aes(x = totalcaff, y 
   scale_x_continuous(limits = c(0,2000))
 ```
 
-![](NHANES-Git_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+![](NHANES-Git_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
