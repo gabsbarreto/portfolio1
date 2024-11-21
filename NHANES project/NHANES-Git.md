@@ -901,11 +901,11 @@ I’ll perform a backwards stepwise method, which consists of including
 all potential confounding variables in the model, removing the least
 significant one until an ideal model is reached.
 
-## STEPWISE
+## Stepwise Procedure
 
 ``` r
 # Fit the generalized linear model
-GLM2.3 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT + GPT_glycemic + GPT_bloodpressure + CHObw + FATbw + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
+GLM2.3 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT + CHObw + FATbw + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
 
 # Model summary
 logLik(GLM2.3)
@@ -920,9 +920,9 @@ summary(GLM2.3)
     ## 
     ## Call:
     ## svyglm(formula = LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1 + 
-    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + GPT_glycemic + GPT_bloodpressure + 
-    ##     CHObw + FATbw + FIBERbw + GPT_glycemic + GPT_bloodpressure + 
-    ##     totalcaff, design = surveysub1, family = Gamma(link = "identity"))
+    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + CHObw + FATbw + FIBERbw + 
+    ##     GPT_glycemic + GPT_bloodpressure + totalcaff, design = surveysub1, 
+    ##     family = Gamma(link = "identity"))
     ## 
     ## Survey design:
     ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No")
@@ -940,11 +940,11 @@ summary(GLM2.3)
     ## RIDAGEYR                                      0.58246    0.03315  17.570
     ## BMXBMI                                       -0.87325    0.18574  -4.701
     ## WAISTHEIGHT                                 162.15542   14.45845  11.215
-    ## GPT_glycemicYes                              57.30320   37.58919   1.524
-    ## GPT_bloodpressureYes                          6.15375    1.81415   3.392
     ## CHObw                                         0.33603    0.53201   0.632
     ## FATbw                                        -1.60042    1.01887  -1.571
     ## FIBERbw                                     -11.59472    4.27474  -2.712
+    ## GPT_glycemicYes                              57.30320   37.58919   1.524
+    ## GPT_bloodpressureYes                          6.15375    1.81415   3.392
     ## totalcaff                                    -0.01961    0.00469  -4.180
     ##                                             Pr(>|t|)    
     ## (Intercept)                                 1.53e-09 ***
@@ -958,11 +958,11 @@ summary(GLM2.3)
     ## RIDAGEYR                                     < 2e-16 ***
     ## BMXBMI                                      1.45e-05 ***
     ## WAISTHEIGHT                                  < 2e-16 ***
-    ## GPT_glycemicYes                               0.1324    
-    ## GPT_bloodpressureYes                          0.0012 ** 
     ## CHObw                                         0.5299    
     ## FATbw                                         0.1212    
     ## FIBERbw                                       0.0086 ** 
+    ## GPT_glycemicYes                               0.1324    
+    ## GPT_bloodpressureYes                          0.0012 ** 
     ## totalcaff                                   9.17e-05 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -972,36 +972,40 @@ summary(GLM2.3)
     ## Number of Fisher Scoring iterations: 8
 
 ``` r
-anova(GLM2.3, method = "Wald")
+car::Anova(GLM2.3, test = "F", type = 'III')
 ```
 
-    ## Anova table: (Wald tests)
-    ## svyglm(formula = LBXGLT ~ exercisecat, design = surveysub1, family = Gamma(link = "identity"))
-    ##                      stats        df ddf         p    
-    ## exercisecat       118.5036   2.00000  77 < 2.2e-16 ***
-    ## RIAGENDR            0.0718   1.00000  76 0.7894304    
-    ## RIDRETH1            5.9670   4.00000  72 0.0003327 ***
-    ## RIDAGEYR          785.0340   1.00000  71 < 2.2e-16 ***
-    ## BMXBMI            307.9779   1.00000  70 < 2.2e-16 ***
-    ## WAISTHEIGHT       133.1825   1.00000  69 < 2.2e-16 ***
-    ## GPT_glycemic        4.1787   1.00000  68 0.0448103 *  
-    ## GPT_bloodpressure  16.4933   1.00000  67 0.0001303 ***
-    ## CHObw               6.5779   1.00000  66 0.0126067 *  
-    ## FATbw               5.4178   1.00000  65 0.0230574 *  
-    ## FIBERbw             2.9516   1.00000  64 0.0906273 .  
-    ## totalcaff          17.4719   1.00000  63 9.165e-05 ***
+    ## Analysis of Deviance Table (Type III tests)
+    ## 
+    ## Response: LBXGLT
+    ##                   Df        F    Pr(>F)    
+    ## (Intercept)        1  49.9459 1.526e-09 ***
+    ## exercisecat        2  16.7850 1.434e-06 ***
+    ## RIAGENDR           1   4.3472  0.041128 *  
+    ## RIDRETH1           4  12.4663 1.575e-07 ***
+    ## RIDAGEYR           1 308.7199 < 2.2e-16 ***
+    ## BMXBMI             1  22.1027 1.452e-05 ***
+    ## WAISTHEIGHT        1 125.7823 < 2.2e-16 ***
+    ## CHObw              1   0.3989  0.529921    
+    ## FATbw              1   2.4674  0.121242    
+    ## FIBERbw            1   7.3570  0.008602 ** 
+    ## GPT_glycemic       1   2.3240  0.132399    
+    ## GPT_bloodpressure  1  11.5063  0.001203 ** 
+    ## totalcaff          1  17.4719 9.165e-05 ***
+    ## Residuals         63                       
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-#### REMOVE THE VARIABLE SEX
-GLM2.4 <- svyglm(LBXGLT ~ exercisecat +  RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT + GPT_glycemic + GPT_bloodpressure + CHObw + FATbw + FIBERbw + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
+#### REMOVE THE VARIABLE CARBOHYDRATE
+GLM2.4 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
+                 + FATbw + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
 
 # Model summary
 logLik(GLM2.4)
 ```
 
-    ## [1] -560.7849
+    ## [1] -560.2848
 
 ``` r
 summary(GLM2.4)
@@ -1009,86 +1013,90 @@ summary(GLM2.4)
 
     ## 
     ## Call:
-    ## svyglm(formula = LBXGLT ~ exercisecat + RIDRETH1 + RIDAGEYR + 
-    ##     BMXBMI + WAISTHEIGHT + GPT_glycemic + GPT_bloodpressure + 
-    ##     CHObw + FATbw + FIBERbw + totalcaff, design = surveysub1, 
-    ##     family = Gamma(link = "identity"))
+    ## svyglm(formula = LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1 + 
+    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + FATbw + FIBERbw + GPT_glycemic + 
+    ##     GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = "identity"))
     ## 
     ## Survey design:
     ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No")
     ## 
     ## Coefficients:
     ##                                               Estimate Std. Error t value
-    ## (Intercept)                                  34.286737   4.918065   6.972
-    ## exercisecatmoderate                          -2.452595   1.185662  -2.069
-    ## exercisecathigh                              -6.007405   1.164011  -5.161
-    ## RIDRETH1Other Hispanic                       -3.958699   2.045161  -1.936
-    ## RIDRETH1Non-Hispanic White                   -7.078954   1.483103  -4.773
-    ## RIDRETH1Non-Hispanic Black                   -7.476368   1.696508  -4.407
-    ## RIDRETH1Other Race - Including Multi-Racial   0.965315   2.461112   0.392
-    ## RIDAGEYR                                      0.592066   0.031748  18.649
-    ## BMXBMI                                       -0.747606   0.178083  -4.198
-    ## WAISTHEIGHT                                 153.519227  13.464353  11.402
-    ## GPT_glycemicYes                              57.898378  37.704972   1.536
-    ## GPT_bloodpressureYes                          6.187998   1.830721   3.380
-    ## CHObw                                         0.409270   0.532914   0.768
-    ## FATbw                                        -1.398690   0.995425  -1.405
-    ## FIBERbw                                     -12.696665   4.289830  -2.960
-    ## totalcaff                                    -0.019296   0.004744  -4.067
+    ## (Intercept)                                  35.515326   4.707736   7.544
+    ## exercisecatmoderate                          -2.567567   1.194248  -2.150
+    ## exercisecathigh                              -6.419076   1.214110  -5.287
+    ## RIAGENDRFemale                               -2.414867   1.130730  -2.136
+    ## RIDRETH1Other Hispanic                       -3.791620   2.014385  -1.882
+    ## RIDRETH1Non-Hispanic White                   -6.843518   1.486882  -4.603
+    ## RIDRETH1Non-Hispanic Black                   -7.077140   1.693138  -4.180
+    ## RIDRETH1Other Race - Including Multi-Racial   1.126410   2.475975   0.455
+    ## RIDAGEYR                                      0.577664   0.034897  16.553
+    ## BMXBMI                                       -0.895898   0.185266  -4.836
+    ## WAISTHEIGHT                                 162.829220  14.507092  11.224
+    ## FATbw                                        -1.151239   0.844632  -1.363
+    ## FIBERbw                                     -10.173986   3.605010  -2.822
+    ## GPT_glycemicYes                              57.358324  37.541045   1.528
+    ## GPT_bloodpressureYes                          6.169442   1.815550   3.398
+    ## totalcaff                                    -0.019263   0.004939  -3.900
     ##                                             Pr(>|t|)    
-    ## (Intercept)                                 2.09e-09 ***
-    ## exercisecatmoderate                         0.042634 *  
-    ## exercisecathigh                             2.59e-06 ***
-    ## RIDRETH1Other Hispanic                      0.057332 .  
-    ## RIDRETH1Non-Hispanic White                  1.09e-05 ***
-    ## RIDRETH1Non-Hispanic Black                  4.08e-05 ***
-    ## RIDRETH1Other Race - Including Multi-Racial 0.696193    
+    ## (Intercept)                                 2.05e-10 ***
+    ## exercisecatmoderate                         0.035345 *  
+    ## exercisecathigh                             1.60e-06 ***
+    ## RIAGENDRFemale                              0.036538 *  
+    ## RIDRETH1Other Hispanic                      0.064347 .  
+    ## RIDRETH1Non-Hispanic White                  2.03e-05 ***
+    ## RIDRETH1Non-Hispanic Black                  9.03e-05 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.650695    
     ## RIDAGEYR                                     < 2e-16 ***
-    ## BMXBMI                                      8.48e-05 ***
+    ## BMXBMI                                      8.69e-06 ***
     ## WAISTHEIGHT                                  < 2e-16 ***
-    ## GPT_glycemicYes                             0.129575    
-    ## GPT_bloodpressureYes                        0.001239 ** 
-    ## CHObw                                       0.445320    
-    ## FATbw                                       0.164822    
-    ## FIBERbw                                     0.004314 ** 
-    ## totalcaff                                   0.000133 ***
+    ## FATbw                                       0.177657    
+    ## FIBERbw                                     0.006348 ** 
+    ## GPT_glycemicYes                             0.131469    
+    ## GPT_bloodpressureYes                        0.001172 ** 
+    ## totalcaff                                   0.000233 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for Gamma family taken to be 0.1448779)
+    ## (Dispersion parameter for Gamma family taken to be 0.1446388)
     ## 
-    ## Number of Fisher Scoring iterations: 8
+    ## Number of Fisher Scoring iterations: 7
 
 ``` r
-anova(GLM2.4, method = "Wald")
+car::Anova(GLM2.4, test = "F", type = 'III')
 ```
 
-    ## Anova table: (Wald tests)
-    ## svyglm(formula = LBXGLT ~ exercisecat, design = surveysub1, family = Gamma(link = "identity"))
-    ##                      stats       df ddf         p    
-    ## exercisecat       118.5036   2.0000  77 < 2.2e-16 ***
-    ## RIDRETH1            5.9071   4.0000  73 0.0003562 ***
-    ## RIDAGEYR          784.5154   1.0000  72 < 2.2e-16 ***
-    ## BMXBMI            303.0656   1.0000  71 < 2.2e-16 ***
-    ## WAISTHEIGHT       144.4849   1.0000  70 < 2.2e-16 ***
-    ## GPT_glycemic        4.2297   1.0000  69 0.0435053 *  
-    ## GPT_bloodpressure  16.4463   1.0000  68 0.0001313 ***
-    ## CHObw               5.6265   1.0000  67 0.0205708 *  
-    ## FATbw               4.9244   1.0000  66 0.0299221 *  
-    ## FIBERbw             3.8982   1.0000  65 0.0525904 .  
-    ## totalcaff          16.5420   1.0000  64 0.0001328 ***
+    ## Analysis of Deviance Table (Type III tests)
+    ## 
+    ## Response: LBXGLT
+    ##                   Df        F    Pr(>F)    
+    ## (Intercept)        1  56.9125 2.053e-10 ***
+    ## exercisecat        2  16.8275 1.341e-06 ***
+    ## RIAGENDR           1   4.5611 0.0365382 *  
+    ## RIDRETH1           4  12.5859 1.299e-07 ***
+    ## RIDAGEYR           1 274.0089 < 2.2e-16 ***
+    ## BMXBMI             1  23.3845 8.685e-06 ***
+    ## WAISTHEIGHT        1 125.9807 < 2.2e-16 ***
+    ## FATbw              1   1.8578 0.1776569    
+    ## FIBERbw            1   7.9647 0.0063476 ** 
+    ## GPT_glycemic       1   2.3344 0.1314691    
+    ## GPT_bloodpressure  1  11.5472 0.0011717 ** 
+    ## totalcaff          1  15.2126 0.0002331 ***
+    ## Residuals         64                       
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-#### REMOVE THE VARIABLE GPT_glycemic
-GLM2.5 <- svyglm(LBXGLT ~ exercisecat +  RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT +   CHObw + FATbw + FIBERbw +  GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = 'identity' ))
+#### REMOVE THE VARIABLE FATbw
+GLM2.5 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
+                 + FIBERbw + GPT_glycemic + GPT_bloodpressure + totalcaff, 
+                 design = surveysub1, family = Gamma(link = 'identity' ))
 
 # Model summary
 logLik(GLM2.5)
 ```
 
-    ## [1] -561.0723
+    ## [1] -560.4111
 
 ``` r
 summary(GLM2.5)
@@ -1096,70 +1104,158 @@ summary(GLM2.5)
 
     ## 
     ## Call:
-    ## svyglm(formula = LBXGLT ~ exercisecat + RIDRETH1 + RIDAGEYR + 
-    ##     BMXBMI + WAISTHEIGHT + CHObw + FATbw + FIBERbw + GPT_bloodpressure + 
-    ##     totalcaff, design = surveysub1, family = Gamma(link = "identity"))
+    ## svyglm(formula = LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1 + 
+    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + FIBERbw + GPT_glycemic + 
+    ##     GPT_bloodpressure + totalcaff, design = surveysub1, family = Gamma(link = "identity"))
     ## 
     ## Survey design:
     ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No")
     ## 
     ## Coefficients:
     ##                                               Estimate Std. Error t value
-    ## (Intercept)                                  34.192657   4.917250   6.954
-    ## exercisecatmoderate                          -2.427842   1.186450  -2.046
-    ## exercisecathigh                              -5.975315   1.165810  -5.125
-    ## RIDRETH1Other Hispanic                       -3.958170   2.045999  -1.935
-    ## RIDRETH1Non-Hispanic White                   -7.080538   1.484638  -4.769
-    ## RIDRETH1Non-Hispanic Black                   -7.494598   1.700406  -4.408
-    ## RIDRETH1Other Race - Including Multi-Racial   0.954438   2.463025   0.388
-    ## RIDAGEYR                                      0.593129   0.031730  18.693
-    ## BMXBMI                                       -0.748659   0.178309  -4.199
-    ## WAISTHEIGHT                                 153.690631  13.475408  11.405
-    ## CHObw                                         0.410696   0.532819   0.771
-    ## FATbw                                        -1.396671   0.995497  -1.403
-    ## FIBERbw                                     -12.772760   4.297379  -2.972
-    ## GPT_bloodpressureYes                          6.154028   1.832294   3.359
-    ## totalcaff                                    -0.019327   0.004743  -4.075
+    ## (Intercept)                                  33.963843   4.298156   7.902
+    ## exercisecatmoderate                          -2.511360   1.195477  -2.101
+    ## exercisecathigh                              -6.415187   1.211889  -5.294
+    ## RIAGENDRFemale                               -2.274807   1.112223  -2.045
+    ## RIDRETH1Other Hispanic                       -3.788567   2.018372  -1.877
+    ## RIDRETH1Non-Hispanic White                   -6.879290   1.490931  -4.614
+    ## RIDRETH1Non-Hispanic Black                   -7.203922   1.721339  -4.185
+    ## RIDRETH1Other Race - Including Multi-Racial   1.190745   2.461245   0.484
+    ## RIDAGEYR                                      0.582891   0.035068  16.622
+    ## BMXBMI                                       -0.872403   0.184313  -4.733
+    ## WAISTHEIGHT                                 162.650246  14.536853  11.189
+    ## FIBERbw                                     -12.110665   3.352573  -3.612
+    ## GPT_glycemicYes                              57.300015  37.486922   1.529
+    ## GPT_bloodpressureYes                          6.164999   1.814887   3.397
+    ## totalcaff                                    -0.019680   0.004951  -3.975
     ##                                             Pr(>|t|)    
-    ## (Intercept)                                 2.09e-09 ***
-    ## exercisecatmoderate                         0.044775 *  
-    ## exercisecathigh                             2.87e-06 ***
-    ## RIDRETH1Other Hispanic                      0.057395 .  
-    ## RIDRETH1Non-Hispanic White                  1.08e-05 ***
-    ## RIDRETH1Non-Hispanic Black                  4.00e-05 ***
-    ## RIDRETH1Other Race - Including Multi-Racial 0.699647    
+    ## (Intercept)                                 4.36e-11 ***
+    ## exercisecatmoderate                         0.039549 *  
+    ## exercisecathigh                             1.52e-06 ***
+    ## RIAGENDRFemale                              0.044879 *  
+    ## RIDRETH1Other Hispanic                      0.065002 .  
+    ## RIDRETH1Non-Hispanic White                  1.91e-05 ***
+    ## RIDRETH1Non-Hispanic Black                  8.74e-05 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.630155    
     ## RIDAGEYR                                     < 2e-16 ***
-    ## BMXBMI                                      8.33e-05 ***
+    ## BMXBMI                                      1.24e-05 ***
     ## WAISTHEIGHT                                  < 2e-16 ***
-    ## CHObw                                       0.443619    
-    ## FATbw                                       0.165379    
-    ## FIBERbw                                     0.004142 ** 
-    ## GPT_bloodpressureYes                        0.001314 ** 
-    ## totalcaff                                   0.000128 ***
+    ## FIBERbw                                     0.000592 ***
+    ## GPT_glycemicYes                             0.131232    
+    ## GPT_bloodpressureYes                        0.001167 ** 
+    ## totalcaff                                   0.000179 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for Gamma family taken to be 0.1449881)
+    ## (Dispersion parameter for Gamma family taken to be 0.1446127)
     ## 
-    ## Number of Fisher Scoring iterations: 8
+    ## Number of Fisher Scoring iterations: 7
 
 ``` r
-anova(GLM2.5, method = "Wald")
+car::Anova(GLM2.5, test = "F", type = 'III')
 ```
 
-    ## Anova table: (Wald tests)
-    ## svyglm(formula = LBXGLT ~ exercisecat, design = surveysub1, family = Gamma(link = "identity"))
-    ##                      stats       df ddf         p    
-    ## exercisecat       118.5036   2.0000  77 < 2.2e-16 ***
-    ## RIDRETH1            5.9071   4.0000  73 0.0003562 ***
-    ## RIDAGEYR          784.5154   1.0000  72 < 2.2e-16 ***
-    ## BMXBMI            303.0656   1.0000  71 < 2.2e-16 ***
-    ## WAISTHEIGHT       144.4849   1.0000  70 < 2.2e-16 ***
-    ## CHObw               5.9016   1.0000  69 0.0177354 *  
-    ## FATbw               5.0854   1.0000  68 0.0273511 *  
-    ## FIBERbw             4.6339   1.0000  67 0.0349510 *  
-    ## GPT_bloodpressure  14.0722   1.0000  66 0.0003733 ***
-    ## totalcaff          16.6054   1.0000  65 0.0001276 ***
+    ## Analysis of Deviance Table (Type III tests)
+    ## 
+    ## Response: LBXGLT
+    ##                   Df        F    Pr(>F)    
+    ## (Intercept)        1  62.4409 4.359e-11 ***
+    ## exercisecat        2  16.8478 1.274e-06 ***
+    ## RIAGENDR           1   4.1832 0.0448794 *  
+    ## RIDRETH1           4  12.9585 8.160e-08 ***
+    ## RIDAGEYR           1 276.2787 < 2.2e-16 ***
+    ## BMXBMI             1  22.4038 1.237e-05 ***
+    ## WAISTHEIGHT        1 125.1897 < 2.2e-16 ***
+    ## FIBERbw            1  13.0491 0.0005917 ***
+    ## GPT_glycemic       1   2.3364 0.1312323    
+    ## GPT_bloodpressure  1  11.5390 0.0011672 ** 
+    ## totalcaff          1  15.8017 0.0001791 ***
+    ## Residuals         65                       
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+#### REMOVE THE VARIABLE FATbw
+GLM2.6 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
+                 + FIBERbw + GPT_bloodpressure + totalcaff, 
+                 design = surveysub1, family = Gamma(link = 'identity' ))
+
+# Model summary
+logLik(GLM2.6)
+```
+
+    ## [1] -560.6909
+
+``` r
+summary(GLM2.6)
+```
+
+    ## 
+    ## Call:
+    ## svyglm(formula = LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1 + 
+    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + FIBERbw + GPT_bloodpressure + 
+    ##     totalcaff, design = surveysub1, family = Gamma(link = "identity"))
+    ## 
+    ## Survey design:
+    ## subset(survey1, RIDAGEYR >= 18 & pregnant == "No")
+    ## 
+    ## Coefficients:
+    ##                                              Estimate Std. Error t value
+    ## (Intercept)                                  33.87822    4.29782   7.883
+    ## exercisecatmoderate                          -2.48748    1.19616  -2.080
+    ## exercisecathigh                              -6.38655    1.21324  -5.264
+    ## RIAGENDRFemale                               -2.29105    1.11185  -2.061
+    ## RIDRETH1Other Hispanic                       -3.78734    2.01938  -1.875
+    ## RIDRETH1Non-Hispanic White                   -6.87880    1.49287  -4.608
+    ## RIDRETH1Non-Hispanic Black                   -7.21888    1.72503  -4.185
+    ## RIDRETH1Other Race - Including Multi-Racial   1.18125    2.46316   0.480
+    ## RIDAGEYR                                      0.58383    0.03504  16.662
+    ## BMXBMI                                       -0.87447    0.18453  -4.739
+    ## WAISTHEIGHT                                 162.88597   14.54779  11.197
+    ## FIBERbw                                     -12.17105    3.35484  -3.628
+    ## GPT_bloodpressureYes                          6.13151    1.81642   3.376
+    ## totalcaff                                    -0.01971    0.00495  -3.982
+    ##                                             Pr(>|t|)    
+    ## (Intercept)                                 4.29e-11 ***
+    ## exercisecatmoderate                         0.041455 *  
+    ## exercisecathigh                             1.65e-06 ***
+    ## RIAGENDRFemale                              0.043289 *  
+    ## RIDRETH1Other Hispanic                      0.065149 .  
+    ## RIDRETH1Non-Hispanic White                  1.91e-05 ***
+    ## RIDRETH1Non-Hispanic Black                  8.62e-05 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.633121    
+    ## RIDAGEYR                                     < 2e-16 ***
+    ## BMXBMI                                      1.19e-05 ***
+    ## WAISTHEIGHT                                  < 2e-16 ***
+    ## FIBERbw                                     0.000558 ***
+    ## GPT_bloodpressureYes                        0.001238 ** 
+    ## totalcaff                                   0.000173 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for Gamma family taken to be 0.1447183)
+    ## 
+    ## Number of Fisher Scoring iterations: 7
+
+``` r
+car::Anova(GLM2.6, test = "F", type = 'III')
+```
+
+    ## Analysis of Deviance Table (Type III tests)
+    ## 
+    ## Response: LBXGLT
+    ##                   Df       F    Pr(>F)    
+    ## (Intercept)        1  62.136 4.295e-11 ***
+    ## exercisecat        2  16.734 1.322e-06 ***
+    ## RIAGENDR           1   4.246 0.0432891 *  
+    ## RIDRETH1           4  12.934 7.855e-08 ***
+    ## RIDAGEYR           1 277.609 < 2.2e-16 ***
+    ## BMXBMI             1  22.457 1.186e-05 ***
+    ## WAISTHEIGHT        1 125.364 < 2.2e-16 ***
+    ## FIBERbw            1  13.162 0.0005577 ***
+    ## GPT_bloodpressure  1  11.395 0.0012378 ** 
+    ## totalcaff          1  15.858 0.0001727 ***
+    ## Residuals         66                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -1171,24 +1267,24 @@ Therefore, a polynomial model will be tested.
 
 ``` r
 #### POLYNOMIAL MODEL
-GLM2.6 <- svyglm(LBXGLT ~ exercisecat +  RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT +   CHObw + FATbw + FIBERbw +  GPT_bloodpressure + poly(totalcaff,2) , design = subset(surveysub1, !is.na(totalcaff) ), family = Gamma(link = 'identity' ))
+GLM2.7 <- svyglm(LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1  + RIDAGEYR+  BMXBMI + WAISTHEIGHT 
+                 + FIBERbw + GPT_bloodpressure + poly(totalcaff,2), 
+                 design = subset(surveysub1, !is.na(totalcaff)), family = Gamma(link = 'identity' ))
 
 # Model summary
-logLik(GLM2.6)
+logLik(GLM2.7)
 ```
 
-    ## Warning in logLik.svyglm(GLM2.6): svyglm not fitted by maximum likelihood.
-
-    ## [1] -540.722
+    ## [1] -540.1787
 
 ``` r
-summary(GLM2.6)
+summary(GLM2.7)
 ```
 
     ## 
     ## Call:
-    ## svyglm(formula = LBXGLT ~ exercisecat + RIDRETH1 + RIDAGEYR + 
-    ##     BMXBMI + WAISTHEIGHT + CHObw + FATbw + FIBERbw + GPT_bloodpressure + 
+    ## svyglm(formula = LBXGLT ~ exercisecat + RIAGENDR + RIDRETH1 + 
+    ##     RIDAGEYR + BMXBMI + WAISTHEIGHT + FIBERbw + GPT_bloodpressure + 
     ##     poly(totalcaff, 2), design = subset(surveysub1, !is.na(totalcaff)), 
     ##     family = Gamma(link = "identity"))
     ## 
@@ -1197,68 +1293,67 @@ summary(GLM2.6)
     ## 
     ## Coefficients:
     ##                                               Estimate Std. Error t value
-    ## (Intercept)                                   30.74361    4.74262   6.482
-    ## exercisecatmoderate                           -2.44371    1.19286  -2.049
-    ## exercisecathigh                               -6.04219    1.16774  -5.174
-    ## RIDRETH1Other Hispanic                        -3.80102    2.01055  -1.891
-    ## RIDRETH1Non-Hispanic White                    -6.33736    1.45324  -4.361
-    ## RIDRETH1Non-Hispanic Black                    -7.98779    1.72250  -4.637
-    ## RIDRETH1Other Race - Including Multi-Racial    1.21249    2.44098   0.497
-    ## RIDAGEYR                                       0.60990    0.03222  18.932
-    ## BMXBMI                                        -0.68140    0.18149  -3.755
-    ## WAISTHEIGHT                                  150.19729   13.48473  11.138
-    ## CHObw                                          0.22046    0.46484   0.474
-    ## FATbw                                         -0.95168    1.00093  -0.951
-    ## FIBERbw                                      -11.93315    4.09200  -2.916
-    ## GPT_bloodpressureYes                           6.11412    1.84804   3.308
-    ## poly(totalcaff, 2)1                         -407.77325   65.56131  -6.220
-    ## poly(totalcaff, 2)2                          267.36868   93.87204   2.848
+    ## (Intercept)                                   30.13561    4.27113   7.056
+    ## exercisecatmoderate                           -2.49194    1.20107  -2.075
+    ## exercisecathigh                               -6.47650    1.22250  -5.298
+    ## RIAGENDRFemale                                -2.46382    1.12921  -2.182
+    ## RIDRETH1Other Hispanic                        -3.67327    1.98009  -1.855
+    ## RIDRETH1Non-Hispanic White                    -6.05651    1.46083  -4.146
+    ## RIDRETH1Non-Hispanic Black                    -7.70121    1.73480  -4.439
+    ## RIDRETH1Other Race - Including Multi-Racial    1.45906    2.44481   0.597
+    ## RIDAGEYR                                       0.60244    0.03446  17.484
+    ## BMXBMI                                        -0.80588    0.18625  -4.327
+    ## WAISTHEIGHT                                  159.59970   14.53838  10.978
+    ## FIBERbw                                      -11.82300    3.36183  -3.517
+    ## GPT_bloodpressureYes                           6.07652    1.82953   3.321
+    ## poly(totalcaff, 2)1                         -420.68004   65.20227  -6.452
+    ## poly(totalcaff, 2)2                          273.43684   92.34005   2.961
     ##                                             Pr(>|t|)    
-    ## (Intercept)                                 1.49e-08 ***
-    ## exercisecatmoderate                         0.044605 *  
-    ## exercisecathigh                             2.46e-06 ***
-    ## RIDRETH1Other Hispanic                      0.063215 .  
-    ## RIDRETH1Non-Hispanic White                  4.80e-05 ***
-    ## RIDRETH1Non-Hispanic Black                  1.79e-05 ***
-    ## RIDRETH1Other Race - Including Multi-Racial 0.621087    
+    ## (Intercept)                                 1.38e-09 ***
+    ## exercisecatmoderate                         0.041971 *  
+    ## exercisecathigh                             1.49e-06 ***
+    ## RIAGENDRFemale                              0.032739 *  
+    ## RIDRETH1Other Hispanic                      0.068117 .  
+    ## RIDRETH1Non-Hispanic White                  0.000100 ***
+    ## RIDRETH1Non-Hispanic Black                  3.58e-05 ***
+    ## RIDRETH1Other Race - Including Multi-Racial 0.552715    
     ## RIDAGEYR                                     < 2e-16 ***
-    ## BMXBMI                                      0.000377 ***
+    ## BMXBMI                                      5.33e-05 ***
     ## WAISTHEIGHT                                  < 2e-16 ***
-    ## CHObw                                       0.636928    
-    ## FATbw                                       0.345286    
-    ## FIBERbw                                     0.004880 ** 
-    ## GPT_bloodpressureYes                        0.001543 ** 
-    ## poly(totalcaff, 2)1                         4.25e-08 ***
-    ## poly(totalcaff, 2)2                         0.005905 ** 
+    ## FIBERbw                                     0.000802 ***
+    ## GPT_bloodpressureYes                        0.001473 ** 
+    ## poly(totalcaff, 2)1                         1.59e-08 ***
+    ## poly(totalcaff, 2)2                         0.004275 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for Gamma family taken to be 0.1381321)
+    ## (Dispersion parameter for Gamma family taken to be 0.137737)
     ## 
     ## Number of Fisher Scoring iterations: 5
 
 ``` r
-anova(GLM2.6, method = "Wald")
+car::Anova(GLM2.7, test = "F", type = 'III')
 ```
 
-    ## Anova table: (Wald tests)
-    ## svyglm(formula = LBXGLT ~ exercisecat, design = subset(surveysub1, 
-    ##     !is.na(totalcaff)), family = Gamma(link = "identity"))
-    ##                       stats       df ddf         p    
-    ## exercisecat        121.0476   2.0000  77 < 2.2e-16 ***
-    ## RIDRETH1             4.7848   4.0000  73 0.0017484 ** 
-    ## RIDAGEYR           772.7910   1.0000  72 < 2.2e-16 ***
-    ## BMXBMI             300.0092   1.0000  71 < 2.2e-16 ***
-    ## WAISTHEIGHT        143.9551   1.0000  70 < 2.2e-16 ***
-    ## CHObw                5.9016   1.0000  69 0.0177354 *  
-    ## FATbw                5.0854   1.0000  68 0.0273511 *  
-    ## FIBERbw              4.6339   1.0000  67 0.0349510 *  
-    ## GPT_bloodpressure   14.0722   1.0000  66 0.0003733 ***
-    ## poly(totalcaff, 2)  29.7486   2.0000  64 7.324e-10 ***
+    ## Analysis of Deviance Table (Type III tests)
+    ## 
+    ## Response: LBXGLT
+    ##                    Df        F    Pr(>F)    
+    ## (Intercept)         1  49.7822 1.383e-09 ***
+    ## exercisecat         2  17.4964 8.331e-07 ***
+    ## RIAGENDR            1   4.7607  0.032739 *  
+    ## RIDRETH1            4  11.9083 2.565e-07 ***
+    ## RIDAGEYR            1 305.6948 < 2.2e-16 ***
+    ## BMXBMI              1  18.7216 5.325e-05 ***
+    ## WAISTHEIGHT         1 120.5125 < 2.2e-16 ***
+    ## FIBERbw             1  12.3681  0.000802 ***
+    ## GPT_bloodpressure   1  11.0314  0.001473 ** 
+    ## poly(totalcaff, 2)  2  33.0835 1.231e-10 ***
+    ## Residuals          65                       
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-This is the model we’re keeping (GLM2.6).
+This is the model we’re keeping (GLM2.7).
 
 ## Estimated Means and Plot
 
@@ -1266,19 +1361,20 @@ This is the model we’re keeping (GLM2.6).
 
 Estimated means for different levels of caffeine intake are calculated
 using the ‘emmeans’ package. A plot is created to visualize the
-relationship between coffee/tea intake and LBXGLT (OGTT2H), including
+relationship between caffeine intake and LBXGLT (OGTT2H), including
 confidence intervals.
 
 ``` r
 # Calculate estimated means for totalcaff
-means1 <- data.frame(emmeans(GLM2.6, ~totalcaff, data = surveysub1$variables, at = list(totalcaff = seq(0, 2000, 100) )))
+means1 <- data.frame(emmeans(GLM2.7, ~totalcaff, data = surveysub1$variables, at = list(totalcaff = seq(0, 2000, 100) )))
 
 # Plot observed data and fitted values
-ggplot(data =surveysub1$variables, aes(x = totalcaff, y = LBXGLT)) +
+ggplot(data =  subset(surveysub1$variables, WTSOG2YR > 0), aes(x = totalcaff, y = LBXGLT)) +
   geom_point(pch = 21, aes(alpha = WTSOG2YR)) +
   geom_line(data = means1, size = 1, aes(x = totalcaff, y = emmean)) +
   geom_ribbon(data = means1, alpha = 0.3, aes(y = emmean, ymin = lower.CL, ymax = upper.CL)) +
-  theme_classic()
+  theme_classic() +
+  scale_x_continuous(limits = c(0,2000))
 ```
 
 ![](NHANES-Git_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
