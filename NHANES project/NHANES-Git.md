@@ -4,13 +4,11 @@ NHANES
 ## NHANES (complex survey) data analysis
 
 This study aimed to evaluate the association between habitual caffeine
-consumption and cardiovascular measures (systolic and diastolic blood
-pressure) as well as insulin sensitivity markers (fasting glucose and
-insulin, HOMA-IR, HbA1C, and plasma glucose during a two-hour oral
-glucose tolerance test OGTT2H) in the US population. The data was
-obtained from NHANES, a biannual survey designed to assess the health
-and nutritional status of adults and children in the United States. For
-more information on NHANES, [click
+consumption and markers of insulin sensitivity (HOMA-IR, HbA1C, and
+plasma glucose during a two-hour oral glucose tolerance test OGTT2H) in
+the USA population. The data was obtained from NHANES, a biannual survey
+designed to assess the health and nutritional status of adults and
+children in the United States. For more information on NHANES, [click
 here](https://www.cdc.gov/nchs/nhanes/index.htm).
 
 ## Step-by-step index
@@ -33,7 +31,14 @@ here](https://www.cdc.gov/nchs/nhanes/index.htm).
     design](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#survey-design)
 9.  [Exploratory
     analysis](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#exploratory-analysis)
-10. [Fixing skewness]()
+10. [Fixing
+    skewness](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#fixing-skewness)
+11. [Fitting the Gamma
+    Model](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#fitting-the-gamma-model)
+12. [Stepwise
+    Backwards](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#stepwise-procedure)
+13. [Estimate marginal means and
+    plot](https://github.com/gabsbarreto/portfolio1/blob/main/NHANES%20project/NHANES-Git.md#estimated-means-and-plot)
 
 ### Packages used
 
@@ -43,6 +48,7 @@ library(tidyverse)
 library(survey)
 library(emmeans)
 library(openai)
+library(car)
 ```
 
 ### Obtaining data from NHANES API
@@ -797,7 +803,7 @@ transforming the response variable (LBXGLT).
 
 ``` r
 # Apply Box-Cox transformation to find optimal lambda
-box1 <- car::boxCox(glm(LBXGLT ~ 1, data = surveysub1$variables, weights =surveysub1$variables$WTSOG2YR ))
+box1 <- boxCox(glm(LBXGLT ~ 1, data = surveysub1$variables, weights =surveysub1$variables$WTSOG2YR ))
 ```
 
 ![](NHANES-Git_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
@@ -982,7 +988,7 @@ summary(GLM2.3)
     ## Number of Fisher Scoring iterations: 8
 
 ``` r
-car::Anova(GLM2.3, test = "F", type = 'III')
+Anova(GLM2.3, test = "F", type = 'III')
 ```
 
     ## Analysis of Deviance Table (Type III tests)
@@ -1074,7 +1080,7 @@ summary(GLM2.4)
     ## Number of Fisher Scoring iterations: 7
 
 ``` r
-car::Anova(GLM2.4, test = "F", type = 'III')
+Anova(GLM2.4, test = "F", type = 'III')
 ```
 
     ## Analysis of Deviance Table (Type III tests)
@@ -1164,7 +1170,7 @@ summary(GLM2.5)
     ## Number of Fisher Scoring iterations: 7
 
 ``` r
-car::Anova(GLM2.5, test = "F", type = 'III')
+Anova(GLM2.5, test = "F", type = 'III')
 ```
 
     ## Analysis of Deviance Table (Type III tests)
@@ -1251,7 +1257,7 @@ summary(GLM2.6)
     ## Number of Fisher Scoring iterations: 7
 
 ``` r
-car::Anova(GLM2.6, test = "F", type = 'III')
+Anova(GLM2.6, test = "F", type = 'III')
 ```
 
     ## Analysis of Deviance Table (Type III tests)
@@ -1345,7 +1351,7 @@ summary(GLM2.7)
     ## Number of Fisher Scoring iterations: 5
 
 ``` r
-car::Anova(GLM2.7, test = "F", type = 'III')
+Anova(GLM2.7, test = "F", type = 'III')
 ```
 
     ## Analysis of Deviance Table (Type III tests)
